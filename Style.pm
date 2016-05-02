@@ -61,14 +61,14 @@ sub setSize
 {
 	my ($self, $s) = @_;
 	$self -> {size} = $s if defined ($s);
-	return if defined($f);
+	return if defined($s);
 }
 
 sub setType
 {
 	my ($self, $t) = @_;
 	$self -> {type} = $t if defined ($t);
-	return if defined($f);
+	return if defined($t);
 }
 
 sub setBasedOn
