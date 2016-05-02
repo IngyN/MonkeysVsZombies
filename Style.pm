@@ -3,6 +3,9 @@ use 5.010;
 use strict;
 use warnings;
 
+use lib 'Switch';
+use Switch;
+
 package Style;
 
 sub new ()

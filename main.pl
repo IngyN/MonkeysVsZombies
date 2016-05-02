@@ -77,13 +77,18 @@ if($foot3fail ==0)
 my @footBlocks = (@foot1, @foot2, @foot3);
 
 ################################################
-my $docName = Block->new ("Name", $filename);
+my $docName = Block->new();
+$docName->setStyle_id("Name");
+$docName->setText($filename);
 
-my @fullDocBlockList = ($docName, @docBlocks , @headBlocks , @footBlocks);
 
-for (my $i = 0; $i < @docBlocks; $i++)
+push(my @arrname, $docName);
+
+my @fullDocBlockList = (@arrname,  @headBlocks , @docBlocks , @footBlocks);
+
+for (my $i = 0; $i < @fullDocBlockList; $i++)
 {
-    say $docBlocks[$i]->G;
+    say $fullDocBlockList[$i]->getStyle()->getFont();
 }
 
 
@@ -121,7 +126,7 @@ sub parseDoc
         foreach my $nodes ( $wp->findnodes('./w:pPr/w:pStyle'))
         {
             $temp ->setStyle_id( $nodes->getAttribute("w:val"));
-            styleTemp->set
+            
         }
         
         foreach my $nodes ( $wp->findnodes('./w:pPr/w:rPr/w:rFonts'))
@@ -186,7 +191,7 @@ sub parseDoc
         }
         
         $temp->setText( $txt);
-        
+        $temp->setStyle($styleTemp);
 #        my $t = \$temp;
         push(@blockList, $temp);
 #        $temp->setText("");
