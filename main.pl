@@ -76,7 +76,7 @@ sub parseDoc
         
         foreach my $nodes ( $wp->findnodes('./w:pPr/w:rPr/w:rFonts'))
         {
-            $StyleTemp ->setFont( $nodes->getAttribute("w:ascii"));
+            $styleTemp ->setFont( $nodes->getAttribute("w:ascii"));
         }
         
 #        foreach my $nodes ( $wp->findnodes('./w:pPr/w:rPr/w:color'))
@@ -86,7 +86,7 @@ sub parseDoc
         
         foreach my $nodes ( $wp->findnodes('./w:pPr/w:rPr/w:sz'))
         {
-            $StyleTemp ->setSize( $nodes->getAttribute("w:val"));
+            $styleTemp ->setSize( $nodes->getAttribute("w:val"));
         }
         
 #        foreach my $nodes ( $wp->findnodes('./w:pPr/w:rPr/w:b'))

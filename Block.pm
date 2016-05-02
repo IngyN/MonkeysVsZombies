@@ -28,6 +28,11 @@ sub setText
 	my ($self, $text) = @_;
 	$self->{text} = $text if defined($text);
 }
+sub setStyle
+{
+    my ($self, $style) = @_;
+    $self->{style} = $style if defined($style);
+}
 sub getStyle_id
 {
 	my $self = shift;
@@ -38,5 +43,9 @@ sub getText
 	my $self = shift;
 	return $self ->{text};
 }
-
+sub getStyle
+{
+    my $self = shift;
+    return $self ->{style};
+}
 1;
