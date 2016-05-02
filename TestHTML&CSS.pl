@@ -19,7 +19,7 @@ use Block;
 my $html_potato = HTML::Tiny->new( mode =>'html' );
 my @blockList;
 
-my $potato_block= Block -> new ("Title", "Title of document", Style->new(".0.", "25", ".0.", "head"));
+my $potato_block= Block -> new ("Name", "Title of document", Style->new(".0.", "25", ".0.", "head"));
 $blockList[0] = $potato_block;
 
 
@@ -47,7 +47,7 @@ my $shit = $blockList[2]->getText();
 
 say $shit;
 
-my @htmlList;
+my $htmlList;
 my @cssList;
 
 say $blockList[1];
@@ -55,11 +55,13 @@ say $blockList[1];
 foreach my $i (@blockList)
 {
     my $temp = $i->getStyle_id();
+    say $temp;
     switch($temp)
     {
         case "Name"
         {
-            push (@htmlList, $html_potato->title ($i->{text}));
+            say $html_potato->head( $html_potato->title($i->getText()));
+            $htmlList = $htmlList.$html_potato->head( $html_potato->title($i->getText()));
         }
         else {}
     }
@@ -70,7 +72,7 @@ say "Hello Ingy & Shehab";
 
 open( my $file, '>', 'test.html');
 
-print $file $html_potato->html([$htmlList[0]]);
+print $file $html_potato->html($htmlList);
 
 close $file;
 
