@@ -3,13 +3,36 @@ use 5.010;
 use strict;
 use warnings;
 
+use lib 'Switch';
+use Switch;
+
 package Style;
 
 sub new ()
 {
 	my ($class, $font, $size, $type, $basedOn, $color) = @_;
 	my $self = {};
-    
+	
+	switch($self->{basedOn})
+	 {
+		case "Heading1" {
+			$self->{type}= "bold" unless (defined($type) and !($type eq ".0."));
+			$self->{size}= "18" unless (defined($size) and !($size eq ".0."));
+			}
+		case "Heading2"  {
+			$self->{type} = "italic" unless (defined($type) and !($type eq ".0."));
+			$self->{size}= "16" unless (defined($size) and !($size eq ".0."));
+			}
+		case "Heading3"  {
+			$self->{size}= "14" unless (defined($size) and !($size eq ".0."));
+			}
+		case "Footer"  {
+			$self->{size}= "10" unless (defined($size) and !($size eq ".0."));
+			}
+			#BasedOn = "Normal"
+			else  {
+				}
+		}
     $self->{font} = "Times New Roman" unless (defined($font) and !($font eq ".0."));
     $self->{size} = "12"  unless (defined($size) and !($size eq ".0."));# in pt
     $self->{type} = "none"  unless (defined($type) and !($type eq ".0."));# type: bold, italic, none
