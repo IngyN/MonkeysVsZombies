@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:doc.xml">
+   </FileRef>
+   <FileRef
+      location = "group:foot.xml">
+   </FileRef>
+   <FileRef
+      location = "group:head.xml">
+   </FileRef>
+   <FileRef
+      location = "group:test.docx">
+   </FileRef>
+   <FileRef
+      location = "group:Block.pm">
+   </FileRef>
+   <FileRef
+      location = "group:main.pl">
+   </FileRef>
+   <FileRef
+      location = "group:README.md">
+   </FileRef>
+   <FileRef
+      location = "group:Style.pm">
+   </FileRef>
+</Workspace>
