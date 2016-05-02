@@ -15,8 +15,7 @@ sub new
     
 	$self->{style_id} = "Normal" unless  (defined($style_id) and !($style_id eq ".0."));
 	$self->{text} = "" unless (defined($text) and !($text eq ".0."));
-    
-    say "Oh no", defined($text);
+
     $self->{style} = Style->new()  unless (defined($style) and !($style eq ".0."));
 	#This instruction will create an object of Style when we use the module
 
@@ -46,8 +45,6 @@ sub getStyle_id
 sub getText
 {
 	my $self = shift;
-    say "Oh shit mama";
-    say $self->{text};
 	return $self ->{text};
 }
 sub getStyle
