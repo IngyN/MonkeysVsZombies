@@ -37,3 +37,4 @@ sub getText
 	my $self = shift;
 	return $self ->{text};
 }
+
