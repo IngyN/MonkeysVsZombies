@@ -10,6 +10,12 @@ sub new ()
 	my ($class, $font, $size, $type, $basedOn, $color) = @_;
 	my $self = {};
     
+    $self->{font} = $font;
+    $self->{size} = $size;
+    $self->{type} = $type;
+    $self->{basedOn} = $basedOn;
+    $self->{color} = $color;
+    
     $self->{font} = "Times New Roman" unless (defined($font) and !($font eq ".0."));
     $self->{size} = "12"  unless (defined($size) and !($size eq ".0."));# in pt
     $self->{type} = "none"  unless (defined($type) and !($type eq ".0."));# type: bold, italic, none

@@ -18,34 +18,48 @@ use Block;
 
 my $html_potato = HTML::Tiny->new( mode =>'html' );
 my @blockList;
+
 my $potato_block= Block -> new ("Title", "Title of document", Style->new(".0.", "25", ".0.", "head"));
+$blockList[0] = $potato_block;
 
 
-push(@blockList, $potato_block);
+my $potato_block2= Block -> new ("h1", "Sample Page", Style->new(".0.", "18", "bold", "body"));
 
-$potato_block= Block -> new ("h1", "Sample Page", Style->new(".0.", "18", "bold", "body"));
-push(@blockList, $potato_block);
+$blockList[1] = $potato_block2;
 
-$potato_block= Block -> new ("h2", "Hi", Style->new(".0.", "16", "italic", "body", "#FF0000"));
-push(@blockList, $potato_block);
 
-$potato_block= Block -> new ("p", "Hello World", Style->new(".0.", "12", ".0.", "body", "blue"));
-push(@blockList, $potato_block);
+my $potato_block3= Block -> new ("h2", "Hi", Style->new(".0.", "16", "italic", "body", "#FF0000"));
+$blockList[2] = $potato_block3;
 
-$potato_block= Block -> new ("p", "Second para", Style->new(".0.", "12", ".0.", "body", "blue"));
-push(@blockList, $potato_block);
+#say $blockList[2];
+
+my $potato_block4= Block -> new ("p", "Hello World", Style->new(".0.", "12", ".0.", "body", "blue"));
+$blockList[3] = $potato_block4;
+
+my $potato_block5= Block -> new ("p", "Second para", Style->new(".0.", "12", ".0.", "body", "blue"));
+$blockList[4] = $potato_block5;
+$potato_block5->setText("heellllooooo");
+
+say "pb", $potato_block5->getText();
+
+say scalar @blockList;
+my $shit = $blockList[2]->getText();
+
+say $shit;
 
 my @htmlList;
 my @cssList;
 
+say $blockList[1];
+
 foreach my $i (@blockList)
 {
-    
-    switch(@blockList->[$i]->{style_id})
+    my $temp = $i->getStyle_id();
+    switch($temp)
     {
         case "Name"
         {
-            push (@htmlList, $html_potato->title (@blockList->[$i]->{text}));
+            push (@htmlList, $html_potato->title ($i->{text}));
         }
         else {}
     }
@@ -56,7 +70,7 @@ say "Hello Ingy & Shehab";
 
 open( my $file, '>', 'test.html');
 
-print $file $html_potato->html([@htmlList->[0]]);
+print $file $html_potato->html([$htmlList[0]]);
 
 close $file;
 
@@ -80,7 +94,7 @@ print $file $html_potato->html(
       )
     ]
   );
-print "End..\n";
+
 close $file;
 print "\n\n";
 ##############################################################
@@ -98,7 +112,7 @@ $css_potato->{p}->{'font-family'} = 'Arial' unless defined($p->{'font-family'});
 $css_potato->{p}->{'color'} ='blue' unless defined($p->{'color'});
 $css_potato->{body}->{'color'} = 'red' unless defined($body->{'color'});
 
-print $css_potato->html;
+#print $css_potato->html;
 #print $css_potato->html(
 #	[
 #	$css_potato->{h1}->{'color'},
