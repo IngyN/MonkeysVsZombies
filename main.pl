@@ -6,35 +6,33 @@ use IO::Uncompress::Unzip qw(unzip $UnzipError);
 use XML::LibXML;
 #use XML::LibXML::Documents;
 
-#use Block;
-#use Style;
+use Block;
+use Style;
 
 #say "Hello";
 #Parsing 
 
-rename("/Users/Alia/Documents/TextProcessing/test.docx", "/Users/Alia/Documents/TextProcessing/test.docx.zip");
+rename("test.docx", "test.docx.zip");
 
-my $zipped = "/Users/Alia/Documents/TextProcessing/test.docx.zip";
-my $docBuffer = "/Users/Alia/Documents/TextProcessing/doc.xml";
-my $headerBuffer = "/Users/Alia/Documents/TextProcessing/head.xml";
-my $footerBuffer = "/Users/Alia/Documents/TextProcessing/foot.xml";
+my $zipped = "test.docx.zip";
+my $docBuffer = "doc.xml";
+my $headerBuffer = "head.xml";
+my $footerBuffer = "foot.xml";
 
 unzip $zipped => $docBuffer, Name=> "word/document.xml" or die "unzip doc failed: $UnzipError\n";
 unzip $zipped => $headerBuffer, Name=> "word/header1.xml" or die "unzip head failed: $UnzipError\n";
 unzip $zipped => $footerBuffer, Name=> "word/footer1.xml" or die "unzip foot failed: $UnzipError\n";
 
 
-open(my $doc,  "<",  "/Users/Alia/Documents/TextProcessing/doc.xml") and print("doc success") or die "Can't open document.xml: $!";
-open(my $header, "<",  "/Users/Alia/Documents/TextProcessing/head.xml") and print("header success") or die "Can't open header.xml: $!";
-open(my $footer, "<", "/Users/Alia/Documents/TextProcessing/foot.xml")   and print("footer success")  or die "Can't open footer.xml: $!";
+open(my $doc,  "<",  "doc.xml") and print("doc success") or die "Can't open document.xml: $!";
+open(my $header, "<",  "head.xml") and print("header success") or die "Can't open header.xml: $!";
+open(my $footer, "<", "foot.xml")   and print("footer success")  or die "Can't open footer.xml: $!";
 
-parseDoc($docBuffer);
+my @docBlocks = parseDoc($docBuffer);
+my @headBlocks = parseDoc($headBuffer);
+my @footBlocks = parseDoc($footBuffer);
 
-#my $ae = Archive::Extract->new( archive => $zipped );
-#my $checkExtract = $ae->extract or die $ae->error;
-#
-#my $dir = $ae->extract_path;
-#print $dir;
+
 
 close($doc) || die "Couldn't close file properly";
 close($header) || die "Couldn't close file properly";
@@ -49,13 +47,13 @@ sub parseDoc
     say '$dom->nodeName is: ', $dom->nodeName;
     
     my @blockList;
-    #my $temp = Block->new();
+    my $temp = Block->new();
     
     foreach my $wp ($dom->findnodes('//w:p'))
     {
         foreach my $nodes ( $wp->findnodes('./w:pPr/w:pStyle'))
         {
-#            $temp->setStyle_id( $nodes->getAttribute("w:val"));
+            $temp->setStyle_id( $nodes->getAttribute("w:val"));
         }
         
         my $txt = "";
@@ -64,12 +62,13 @@ sub parseDoc
             $txt = $txt.$text->to_literal();
         }
         
-        say $txt;
-#        $temp->setText( $txt);
-        #say $wp->to_literal();
+        
+        $temp->setText( $txt);
+        
+        push(@blockList, $temp);
     }
 
-    return
+    return @blockList;
 }
 
 
