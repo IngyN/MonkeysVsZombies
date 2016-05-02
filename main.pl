@@ -25,45 +25,82 @@ my $footer1Buffer = "foot1.xml";
 my $footer2Buffer = "foot2.xml";
 my $footer3Buffer = "foot3.xml";
 
-my $docstat = my $h1stat = my $h2stat = my $h3stat = my $f1stat = my $f2stat = my $f3stat = " ";
+my $head1fail= my $head2fail = my $head3fail = my $foot1fail = my $foot2fail = my $foot3fail = 0;
 
- $docstat = unzip $zipped => $docBuffer, Name=> "word/document.xml" or die "unzip doc failed: $UnzipError\n";
+################################
 
- $h1stat = unzip $zipped => $header1Buffer, Name=> "word/header1.xml" or say "unzip head failed: $UnzipError\n";
- $h2stat = unzip $zipped => $header2Buffer, Name=> "word/header2.xml" or say "unzip head failed: $UnzipError\n";
- $h3stat = unzip $zipped => $header3Buffer, Name=> "word/header3.xml" or say "unzip head failed: $UnzipError\n";
+unzip $zipped => $docBuffer, Name=> "word/document.xml" or die "unzip doc failed: $UnzipError\n";
 
- $f1stat = unzip $zipped => $footer1Buffer, Name=> "word/footer1.xml" or say "unzip foot failed: $UnzipError\n";
- $f2stat = unzip $zipped => $footer2Buffer, Name=> "word/footer2.xml" or say "unzip foot failed: $UnzipError\n";
- $f3stat = unzip $zipped => $footer3Buffer, Name=> "word/footer3.xml" or say "unzip foot failed: $UnzipError\n";
+unzip $zipped => $header1Buffer, Name=> "word/header1.xml" or say "unzip head failed: $UnzipError\n" and $head1fail = 1;
+unzip $zipped => $header2Buffer, Name=> "word/header2.xml" or say "unzip head failed: $UnzipError\n" and $head2fail = 1;
+unzip $zipped => $header3Buffer, Name=> "word/header3.xml" or say "unzip head failed: $UnzipError\n" and $head3fail = 1;
 
+unzip $zipped => $footer1Buffer, Name=> "word/footer1.xml" or say "unzip foot failed: $UnzipError\n"and $foot1fail = 1;
+unzip $zipped => $footer2Buffer, Name=> "word/footer2.xml" or say "unzip foot failed: $UnzipError\n"and $foot2fail = 1;
+unzip $zipped => $footer3Buffer, Name=> "word/footer3.xml" or say "unzip foot failed: $UnzipError\n"and $foot3fail = 1;
 
-if ($docstat eq undef) {my @docBlocks = parseDoc($docBuffer) };
+#say $head1fail , $head2fail, $head3fail, $foot1fail, $foot2fail, $foot3fail;
+#####################################################
+my @docBlocks = parseDoc($docBuffer);
 
-unless ($h1stat eq undef) {$h1stat = parseDoc($header1Buffer) } else { $h1stat=""};
-unless ($h2stat eq undef) {$h2stat = parseDoc($header2Buffer) } else { $h1stat=""};
-unless ($h3stat eq undef) {$h3stat = parseDoc($header3Buffer) } else { $h1stat=""};
+my @head1, my @head2, my @head3;
 
-my @headBlocks = $h1stat.$h2stat.$h3stat;
-
-unless ($f1stat eq undef) {$f1stat = parseDoc($footer1Buffer) } else { $f1stat=""};
-unless ($f2stat eq undef) {$f2stat = parseDoc($footer2Buffer) } else { $f1stat=""};
-unless ($f3stat eq undef) {$f3stat = parseDoc($footer3Buffer) } else { $f1stat=""};
-
-my @footBlocks = $f1stat.$f2stat.$f3stat;
-
-for (my $i = 0; $i < @headBlocks; $i++)
+if($head1fail ==0)
 {
-    say $headBlocks[$i]->getStyle_id();
+    @head1 = parseDoc($header1Buffer);
+}
+if($head2fail ==0)
+{
+    @head2 = parseDoc($header2Buffer);
+}
+if($head3fail ==0)
+{
+    @head3 = parseDoc($header3Buffer);
 }
 
-for (my $i = 0; $i < @footBlocks; $i++) {
-    say $footBlocks[$i]->getStyle_id();
+my @headBlocks = (@head1, @head2, @head3);
+
+my @foot1, my @foot2, my @foot3;
+
+if($foot1fail ==0)
+{
+    @foot1 = parseDoc($footer1Buffer);
+}
+if($foot2fail ==0)
+{
+    @foot2 = parseDoc($footer2Buffer);
+}
+if($foot3fail ==0)
+{
+    @foot3 = parseDoc($footer3Buffer);
+}
+my @footBlocks = (@foot1, @foot2, @foot3);
+
+################################################
+my $docName = Block->new ("Name", $filename);
+
+my @fullDocBlockList = ($docName, @docBlocks , @headBlocks , @footBlocks);
+
+for (my $i = 0; $i < @docBlocks; $i++)
+{
+    say $docBlocks[$i]->G;
 }
 
 
-rename($filename.".docx.zip", $filename.".docx");
+#for (my $i = 0; $i < @headBlocks; $i++)
+#{
+#    say $headBlocks[$i]->getText();
+#}
+#
+#for (my $i = 0; $i < @footBlocks; $i++) {
+#    say $footBlocks[$i]->getText();
+#}
 
+closing();
+
+#######################################################################
+#Parse Document
+#######################################################################
 sub parseDoc
 {
     my $path = shift;
@@ -84,6 +121,7 @@ sub parseDoc
         foreach my $nodes ( $wp->findnodes('./w:pPr/w:pStyle'))
         {
             $temp ->setStyle_id( $nodes->getAttribute("w:val"));
+            styleTemp->set
         }
         
         foreach my $nodes ( $wp->findnodes('./w:pPr/w:rPr/w:rFonts'))
@@ -146,6 +184,7 @@ sub parseDoc
         }
         
         $temp->setText( $txt);
+        
 #        my $t = \$temp;
         push(@blockList, $temp);
 #        $temp->setText("");
@@ -156,7 +195,17 @@ sub parseDoc
 }
 
 
-
+sub closing
+{
+    rename($filename.".docx.zip", $filename.".docx");
+    unlink("doc.xml");
+    unlink("head1.xml");
+    unlink("head2.xml");
+    unlink("head3.xml");
+    unlink("foot1.xml");
+    unlink("foot2.xml");
+    unlink("foot3.xml");
+}
 
 #Generating
 
