@@ -38,6 +38,8 @@ close($doc) || die "Couldn't close file properly";
 close($header) || die "Couldn't close file properly";
 close($footer) || die "Couldn't close file properly";
 
+rename("test.docx.zip", "test.docx");
+
 sub parseDoc
 {
     my $path = shift;
