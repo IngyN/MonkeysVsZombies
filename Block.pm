@@ -38,3 +38,4 @@ sub getText
 	return $self ->{text};
 }
 
+1;

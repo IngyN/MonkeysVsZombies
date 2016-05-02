@@ -7,6 +7,7 @@ use XML::LibXML;
 #use XML::LibXML::Documents;
 
 #use Block;
+#use Style;
 
 #say "Hello";
 #Parsing 
@@ -54,7 +55,7 @@ sub parseDoc
     {
         foreach my $nodes ( $wp->findnodes('./w:pPr/w:pStyle'))
         {
-            say $nodes->getAttribute("w:val");
+#            $temp->setStyle_id( $nodes->getAttribute("w:val"));
         }
         
         my $txt = "";
@@ -64,6 +65,7 @@ sub parseDoc
         }
         
         say $txt;
+#        $temp->setText( $txt);
         #say $wp->to_literal();
     }
 
