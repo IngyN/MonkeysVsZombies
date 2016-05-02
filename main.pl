@@ -79,20 +79,53 @@ sub parseDoc
             $StyleTemp ->setFont( $nodes->getAttribute("w:ascii"));
         }
         
-#        foreach my $nodes ( $wp->findnodes('./w:pPr/w:rPr/w:color'))
-#        {
-#            $StyleTemp ->setColor( $nodes->getAttribute("w:val"));
-#        }
+        foreach my $nodes ( $wp->findnodes('./w:pPr/w:rPr/w:color'))
+        {
+            $StyleTemp ->setColor( $nodes->getAttribute("w:val"));
+        }
         
         foreach my $nodes ( $wp->findnodes('./w:pPr/w:rPr/w:sz'))
         {
             $StyleTemp ->setSize( $nodes->getAttribute("w:val"));
         }
         
-#        foreach my $nodes ( $wp->findnodes('./w:pPr/w:rPr/w:b'))
-#        {
-#            $StyleTemp ->setType("bold");
-#        }
+        my $set = 0;
+        foreach my $nodes ( $wp->findnodes('./w:pPr/w:rPr/w:b'))
+        {
+            if ($set == 0)
+            {
+                $StyleTemp ->setType("b");
+                $set = 1;
+            }
+            
+        }
+        foreach my $nodes ( $wp->findnodes('./w:pPr/w:rPr/w:i'))
+        {
+            if ($set == 0)
+            {
+                $StyleTemp ->setType("i");
+                $set = 1;
+            }
+            else
+            {
+                $StyleTemp ->setType($StyleTemp ->getType."i");
+                $set = 1;
+            }
+        }
+        foreach my $nodes ( $wp->findnodes('./w:pPr/w:rPr/w:u'))
+        {
+            if ($set == 0)
+            {
+                $StyleTemp ->setType("u");
+                $set = 1;
+            }
+            else
+            {
+                $StyleTemp ->setType($StyleTemp ->getType."u");
+                $set = 1;
+            }
+        }
+
         
         my $txt = "";
         foreach my $text  ($wp->findnodes('./w:r/w:t'))
@@ -110,12 +143,6 @@ sub parseDoc
     return @blockList;
 }
 
-#open(my $doc,  "<",  "doc.xml") and print("doc success") or die "Can't open document.xml: $!";
-#open(my $header, "<",  "head.xml") and print("header success") or die "Can't open header.xml: $!";
-#open(my $footer, "<", "foot.xml")   and print("footer success")  or die "Can't open footer.xml: $!";
-#close($doc) || die "Couldn't close file properly";
-#close($header) || die "Couldn't close file properly";
-#close($footer) || die "Couldn't close file properly";
 
 
 
