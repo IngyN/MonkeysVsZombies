@@ -9,12 +9,12 @@ sub new ()
 {
 	my ($class, $font, $size, $type, $basedOn) = @_;
 	my $self = {};
-
-	$font = "Times New Roman" unless (defined($font) and !($font eq ".0."));
-	$size = "12"  unless (defined($size) and !($size eq ".0."));# in pt
-	$type = "none"  unless (defined($type) and !($type eq ".0."));# type: bold, italic, none
-	$basedOn = "none"  unless (defined($basedOn) and !($basedOn eq ".0."));
-
+    
+    $self->{font} = "Times New Roman" unless (defined($font) and !($font eq ".0."));
+    $self->{size} = "12"  unless (defined($size) and !($size eq ".0."));# in pt
+    $self->{type} = "none"  unless (defined($type) and !($type eq ".0."));# type: bold, italic, none
+    $self->{basedOn} = "none"  unless (defined($basedOn) and !($basedOn eq ".0."));
+    
 	bless $self, $class;
     return $self;
 }
@@ -70,3 +70,5 @@ sub setBasedOn
 	$self -> {basedOn} = $f if defined ($f);
 	return if defined($f);
 }
+
+1;

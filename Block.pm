@@ -11,7 +11,8 @@ sub new
 	
 	$self->{style_id} = "Normal" unless  (defined($style_id) and !($style_id eq ".0."));
 	$self->{text} = "" unless (defined($text) and !($text eq ".0."));
-	#$style = Style->new()  unless (defined($size) and !($size eq ".0."));	
+    
+    $self->{style} = Style->new()  unless (defined($style) and !($style eq ".0."));
 	#This instruction will create an object of Style when we use the module
 
 	bless ($self, $class);
