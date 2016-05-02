@@ -62,14 +62,37 @@ sub parseDoc
     
     my @blockList;
     my $temp;
+    my $styleTemp;
     
     foreach my $wp ($dom->findnodes('//w:p'))
     {
         $temp= Block->new();
+        $styleTemp = Style->new();
+        
         foreach my $nodes ( $wp->findnodes('./w:pPr/w:pStyle'))
         {
             $temp ->setStyle_id( $nodes->getAttribute("w:val"));
         }
+        
+        foreach my $nodes ( $wp->findnodes('./w:pPr/w:rPr/w:rFonts'))
+        {
+            $StyleTemp ->setFont( $nodes->getAttribute("w:ascii"));
+        }
+        
+#        foreach my $nodes ( $wp->findnodes('./w:pPr/w:rPr/w:color'))
+#        {
+#            $StyleTemp ->setColor( $nodes->getAttribute("w:val"));
+#        }
+        
+        foreach my $nodes ( $wp->findnodes('./w:pPr/w:rPr/w:sz'))
+        {
+            $StyleTemp ->setSize( $nodes->getAttribute("w:val"));
+        }
+        
+#        foreach my $nodes ( $wp->findnodes('./w:pPr/w:rPr/w:b'))
+#        {
+#            $StyleTemp ->setType("bold");
+#        }
         
         my $txt = "";
         foreach my $text  ($wp->findnodes('./w:r/w:t'))
