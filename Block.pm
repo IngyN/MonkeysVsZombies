@@ -9,8 +9,8 @@ sub new
 	 my ($class, $style_id,  $text, $style) = @_;
 	my $self = {};
 	
-	$style_id = "Normal" unless  (defined($style_id) and !($style_id eq ".0."));
-	$text = "" unless (defined($text) and !($text eq ".0."));
+	$self->{style_id} = "Normal" unless  (defined($style_id) and !($style_id eq ".0."));
+	$self->{text} = "" unless (defined($text) and !($text eq ".0."));
 	#$style = Style->new()  unless (defined($size) and !($size eq ".0."));	
 	#This instruction will create an object of Style when we use the module
 
