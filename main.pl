@@ -139,6 +139,8 @@ sub parseDoc
             $styleTemp ->setSize( $nodes->getAttribute("w:val"));
         }
         
+        $styleTemp ->setBasedOn( $temp->getStyle_id);
+        
         my $set = 0;
         foreach my $nodes ( $wp->findnodes('./w:pPr/w:rPr/w:i'))
         {
