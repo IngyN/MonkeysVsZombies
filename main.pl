@@ -12,31 +12,43 @@ use Style;
 #say "Hello";
 #Parsing 
 
+
 rename("test.docx", "test.docx.zip");
 
 my $zipped = "test.docx.zip";
 my $docBuffer = "doc.xml";
-my $headerBuffer = "head.xml";
-my $footerBuffer = "foot.xml";
+my $header1Buffer = "head1.xml";
+my $header2Buffer = "head2.xml";
+my $header3Buffer = "head3.xml";
+
+my $footer1Buffer = "foot1.xml";
+my $footer2Buffer = "foot2.xml";
+my $footer3Buffer = "foot3.xml";
 
 unzip $zipped => $docBuffer, Name=> "word/document.xml" or die "unzip doc failed: $UnzipError\n";
-unzip $zipped => $headerBuffer, Name=> "word/header1.xml" or die "unzip head failed: $UnzipError\n";
-unzip $zipped => $footerBuffer, Name=> "word/footer1.xml" or die "unzip foot failed: $UnzipError\n";
 
+unzip $zipped => $header1Buffer, Name=> "word/header1.xml" or die "unzip head failed: $UnzipError\n";
+unzip $zipped => $header2Buffer, Name=> "word/header2.xml" or die "unzip head failed: $UnzipError\n";
+unzip $zipped => $header3Buffer, Name=> "word/header3.xml" or die "unzip head failed: $UnzipError\n";
 
-open(my $doc,  "<",  "doc.xml") and print("doc success") or die "Can't open document.xml: $!";
-open(my $header, "<",  "head.xml") and print("header success") or die "Can't open header.xml: $!";
-open(my $footer, "<", "foot.xml")   and print("footer success")  or die "Can't open footer.xml: $!";
+unzip $zipped => $footer1Buffer, Name=> "word/footer1.xml" or die "unzip foot failed: $UnzipError\n";
+unzip $zipped => $footer2Buffer, Name=> "word/footer2.xml" or die "unzip foot failed: $UnzipError\n";
+unzip $zipped => $footer3Buffer, Name=> "word/footer3.xml" or die "unzip foot failed: $UnzipError\n";
+
 
 my @docBlocks = parseDoc($docBuffer);
-my @headBlocks = parseDoc($headBuffer);
-my @footBlocks = parseDoc($footBuffer);
+my @headBlocks = (parseDoc($header1Buffer), parseDoc($header2Buffer), parseDoc($header3Buffer));
+my @footBlocks = (parseDoc($footer1Buffer), parseDoc($footer2Buffer), parseDoc($footer3Buffer));
 
+for (my $i = 0; $i < @headBlocks; $i++)
+{
+    say $headBlocks[$i]->getStyle_id();
+}
 
+for (my $i = 0; $i < @footBlocks; $i++) {
+    say $footBlocks[$i]->getStyle_id();
+}
 
-close($doc) || die "Couldn't close file properly";
-close($header) || die "Couldn't close file properly";
-close($footer) || die "Couldn't close file properly";
 
 rename("test.docx.zip", "test.docx");
 
@@ -49,13 +61,14 @@ sub parseDoc
     say '$dom->nodeName is: ', $dom->nodeName;
     
     my @blockList;
-    my $temp = Block->new();
+    my $temp;
     
     foreach my $wp ($dom->findnodes('//w:p'))
     {
+        $temp= Block->new();
         foreach my $nodes ( $wp->findnodes('./w:pPr/w:pStyle'))
         {
-            $temp->setStyle_id( $nodes->getAttribute("w:val"));
+            $temp ->setStyle_id( $nodes->getAttribute("w:val"));
         }
         
         my $txt = "";
@@ -64,14 +77,22 @@ sub parseDoc
             $txt = $txt.$text->to_literal();
         }
         
-        
         $temp->setText( $txt);
-        
+#        my $t = \$temp;
         push(@blockList, $temp);
+#        $temp->setText("");
+#        $temp->setStyle_id("");
     }
 
     return @blockList;
 }
+
+#open(my $doc,  "<",  "doc.xml") and print("doc success") or die "Can't open document.xml: $!";
+#open(my $header, "<",  "head.xml") and print("header success") or die "Can't open header.xml: $!";
+#open(my $footer, "<", "foot.xml")   and print("footer success")  or die "Can't open footer.xml: $!";
+#close($doc) || die "Couldn't close file properly";
+#close($header) || die "Couldn't close file properly";
+#close($footer) || die "Couldn't close file properly";
 
 
 
