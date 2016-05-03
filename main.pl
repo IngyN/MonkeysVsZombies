@@ -109,6 +109,7 @@ my @fullDocBlockList = (@arrname,  @headBlocks , @docBlocks , @footBlocks);
 #}
 
 HTMLgen(@fullDocBlockList);
+CSSgen(@fullDocBlockList);
 
 closing();
 
@@ -361,3 +362,24 @@ sub HTMLgen
 ###########################################
 # 			CSS (Using CSS::Tiny)
 ###########################################
+
+sub CSSgen
+{
+    my $css_potato = CSS::Tiny->new();
+    my @blockList = @_;
+    my $cssList;
+    
+    
+
+
+    my ($h1, $h2, $p , $body) = @_;
+
+
+    $css_potato->{h1}->{'color'} = 'black' unless defined($h1->{'color'});
+    $css_potato->{p}->{'font-family'} = 'Arial' unless defined($p->{'font-family'});
+
+    $css_potato->{p}->{'color'} ='blue' unless defined($p->{'color'});
+    $css_potato->{body}->{'color'} = 'red' unless defined($body->{'color'});
+    
+    $css_potato->write("Potato.css");
+}
