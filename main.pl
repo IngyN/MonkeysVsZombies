@@ -161,7 +161,7 @@ sub parseDoc
         {
             if ($set == 0)
             {
-                $styleTemp ->setType("i");
+                $styleTemp ->setType("italic");
                 $set = 1;
             }
             
@@ -170,12 +170,12 @@ sub parseDoc
         {
             if ($set == 0)
             {
-                $styleTemp ->setType("b");
+                $styleTemp ->setType("bold");
                 $set = 1;
             }
             else
             {
-                $styleTemp ->setType($styleTemp ->getType."b");
+                $styleTemp ->setType($styleTemp ->getType." bold");
                 $set = 1;
             }
         }
@@ -183,12 +183,12 @@ sub parseDoc
         {
             if ($set == 0)
             {
-                $styleTemp ->setType("u");
+                $styleTemp ->setType("underlined");
                 $set = 1;
             }
             else
             {
-                $styleTemp ->setType($styleTemp ->getType."u");
+                $styleTemp ->setType($styleTemp ->getType." underlined");
                 $set = 1;
             }
         }
