@@ -146,5 +146,16 @@ sub sameAs
     return $flag;
 }
 
+sub printStyle
+{
+    my $self = shift;
+         say "Font: ", $self->{font};
+         say "Size: ",$self->{size};
+         say "Type: ",$self->{type};
+         say "BasedOn: ",$self->{basedOn};
+         say "Color: ",$self->{color};
+        print "\n";
+}
+
 
 1;

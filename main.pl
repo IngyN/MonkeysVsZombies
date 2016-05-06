@@ -10,6 +10,8 @@ use lib 'HTML';
 use lib 'CSS';
 use HTML::Tiny;		#Changed name in directory from Tiny.pm to CTiny.pm
 use CSS::Tiny;
+use lib 'Lingua';
+use Lingua::EN::Numbers qw(num2en num2en_ordinal);
 
 use lib 'Switch';
 use Switch;
@@ -109,7 +111,7 @@ my @fullDocBlockList = (@arrname,  @headBlocks , @docBlocks , @footBlocks);
 #}
 
 HTMLgen(@fullDocBlockList);
-CSSgen(@fullDocBlockList);
+#CSSgen(@fullDocBlockList);
 
 closing();
 
@@ -245,6 +247,37 @@ sub HTMLgen
     my $tomato;
     my $temp;
     
+    my $tomato_potato;
+    my @styleList ;
+    my @defaultStyles;
+    my @style_names = qw/Title Heading1 Heading2 Heading3 Heading4 Header Footer Normal Name/;
+    
+    #Pushing defaults
+    
+    foreach my $o (0.. $#style_names)
+    {
+        $tomato_potato = Style-> new (".0.", ".0.", ".0.", $style_names[$o], ".0.");
+        push (@defaultStyles, $tomato_potato);
+    }
+    
+    # Getting styles
+    my $count = 1;
+    foreach my $k (0 .. $#blockList)
+    {
+        my $potato_temp = $blockList[$k]->getStyle();
+        $potato_temp ->printStyle();
+        if(check( $potato_temp, @defaultStyles))
+        {
+#            $potato_temp ->printStyle();
+            $blockList[$k]->setStyle_type($count);
+            $count ++;
+            push(@styleList, $potato_temp);
+        }
+        else {
+            $blockList[$k]->setStyle_type(0);
+        }
+    }
+    
     #PARSING BLOCKLIST
     
     foreach my $i (@blockList)
@@ -260,7 +293,7 @@ sub HTMLgen
                 }
                 else
                 {
-                    push (@htmlHead, $html_potato->tag("title", {class => $i->getStyle_type() }, $i->getText()));
+                    push (@htmlHead, $html_potato->tag("title", {class => toClass($i) }, $i->getText()));
                 }
                 
             }
@@ -271,7 +304,7 @@ sub HTMLgen
                 }
                 else
                 {
-                    push (@htmlHead, $html_potato->tag("h1", {class => $i->getStyle_type() }, $i->getText()));
+                    push (@htmlHead, $html_potato->tag("h1", {class => toClass($i) }, $i->getText()));
                 }
             }
             case "Heading1"
@@ -281,7 +314,7 @@ sub HTMLgen
                 }
                 else
                 {
-                    push(@htmlHead, $html_potato->tag("h2", {class => $i->getStyle_type() }, $i->getText()));
+                    push(@htmlHead, $html_potato->tag("h2", {class => toClass($i) }, $i->getText()));
                 }
             }
             case "Heading2"
@@ -291,7 +324,7 @@ sub HTMLgen
                 }
                 else
                 {
-                    push (@htmlHead, $html_potato->tag("h3", {class => $i->getStyle_type() }, $i->getText()));
+                    push (@htmlHead, $html_potato->tag("h3", {class => toClass($i) }, $i->getText()));
                 }
             }
             case "Heading3"
@@ -301,7 +334,7 @@ sub HTMLgen
                 }
                 else
                 {
-                    push (@htmlHead, $html_potato->tag("h4", {class => $i->getStyle_type() }, $i->getText()));
+                    push (@htmlHead, $html_potato->tag("h4", {class => toClass($i) }, $i->getText()));
                 }
             }
             case "Header"
@@ -311,7 +344,7 @@ sub HTMLgen
                 }
                 else
                 {
-                    push (@htmlHead, $html_potato->tag("header", {class => $i->getStyle_type() }, $i->getText()));
+                    push (@htmlHead, $html_potato->tag("header", {class => toClass($i) }, $i->getText()));
                     
                 }
             }
@@ -322,7 +355,7 @@ sub HTMLgen
                 }
                 else
                 {
-                    push (@htmlHead, $html_potato->tag("p", {class => $i->getStyle_type() }, $i->getText()));
+                    push (@htmlHead, $html_potato->tag("p", {class => toClass($i) }, $i->getText()));
                 }
             }
             case "Normal"
@@ -332,7 +365,7 @@ sub HTMLgen
                 }
                 else
                 {
-                    push (@htmlHead, $html_potato->tag("p", {class => $i->getStyle_type() }, $i->getText()));        		
+                    push (@htmlHead, $html_potato->tag("p", {class => toClass($i) }, $i->getText()));        		
                 }
             }
             else {}
@@ -396,58 +429,14 @@ sub HTMLgen
     
     close $file;
     
-}
+
 
 
 ###########################################
 # 			CSS (Using CSS::Tiny)
 ###########################################
 
-sub check
-{
-    my ($potato_style, @list) = @_;
-    foreach my $i (@list)
-    {
-        if ( $i->sameAs($potato_style) )
-        {
-            return 0;
-        }
-    }
-    return 1;
-}
-
-
-sub CSSgen
-{
     my $css_potato = CSS::Tiny->new();
-    my @blockList = @_;
-
-    my $tomato_potato;
-    my @styleList ;
-    my @defaultStyles;
-    my @style_names = qw/Title Heading1 Heading2 Heading3 Heading4 Header Footer Normal Name/;
-    
-    #Pushing defaults
-    
-    foreach my $o (0.. $#style_names)
-    {
-        $tomato_potato = Style-> new (".0.", ".0.", ".0.", $style_names[$o], ".0.");
-        push (@defaultStyles, $tomato_potato);
-    }
-    
-    # Getting
-    foreach my $k (0 .. $#blockList)
-    {
-        my $potato_temp = $blockList[$k]->getStyle();
-        if(check( $potato_temp, @defaultStyles))
-        {
-            $blockList[$k]->setStyle_type($k+1);
-            push(@styleList, $potato_temp);
-        }
-        else {
-            $blockList[$k]->setStyle_type(0);
-        }
-    }
 
     # Updating css_potato
     my	$temp_potato;
@@ -466,13 +455,40 @@ sub CSSgen
     $css_potato->write($filename.".css");
 }
 
+sub check
+{
+    my ($potato_style, @list) = @_;
+    foreach my $i (@list)
+    {
+        if ( $i->sameAs($potato_style) )
+        {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+sub toClass
+{
+    my $temp_block = shift;
+    my $temp1 = $temp_block->getStyle_type();
+    $temp1 = num2en($temp1);
+    $temp1 =~ s/\s//g;
+    return $temp1;
+
+}
+
 sub toCSS
 {
+#    $string =~ s/\s//g;
     my $tomato_block = shift;
     my $css = shift;
     my @properties = qw/color font/;
     #my @fontType = qw/h1 h2 h3 h4 p header/;
     my $temp = $tomato_block -> getStyle_id();
+    my $temp1 = $tomato_block->getStyle_type();
+    my $temp2 = num2en($temp1);
+    $temp2 =~ s/\s//g;
     my $style = $tomato_block -> getStyle();
     
     switch ($temp)
@@ -482,12 +498,12 @@ sub toCSS
             if($tomato_block->getStyle_type() == 0)
             {
                 $css->{h1}->{color} = $style->getColor();
-                $css->{h1}->{font} = $style->getType()." ".$style->getSize()." ".$style->getFont();
+                $css->{h1}->{font} = $style->getType()." ".$style->getSize()."px ".$style->getFont();
             }
             else
             {
-                $css->{".".$tomato_block->getStyle_type()} = { color =>$style->getColor(),
-                    font => $style->getType()." ".$style->getSize()." ".$style->getFont()};
+                $css->{".".$temp2} = { color =>$style->getColor(),
+                    font => $style->getType()." ".$style->getSize()."px ".$style->getFont()};
             }
         }
         case "Heading1"
@@ -495,12 +511,11 @@ sub toCSS
             if($tomato_block->getStyle_type() == 0)
             {
                 $css->{h2}->{color} = $style->getColor();
-                $css->{h2}->{font} = $style->getType()." ".$style->getSize()." ".$style->getFont();
+                $css->{h2}->{font} = $style->getType()." ".$style->getSize()."px ".$style->getFont();
             }
             else
             {
-                $css->{".".$tomato_block->getStyle_type()} = { color =>$style->getColor()};
-                $css->{".".$tomato_block->getStyle_type()} =	{ font => $style->getType()." ".$style->getSize()." ".$style->getFont() };
+                $css->{".".$temp2} = { color =>$style->getColor(), font => $style->getType()." ".$style->getSize()."px ".$style->getFont() };
             }
         }
         case "Heading2"
@@ -508,12 +523,11 @@ sub toCSS
             if($tomato_block->getStyle_type() == 0)
             {
                 $css->{h3}->{color} = $style->getColor();
-                $css->{h3}->{font} = $style->getType()." ".$style->getSize()." ".$style->getFont();
+                $css->{h3}->{font} = $style->getType()." ".$style->getSize()."px ".$style->getFont();
             }
             else
             {
-                $css->{".".$tomato_block->getStyle_type()} = { color =>$style->getColor()};
-                $css->{".".$tomato_block->getStyle_type()} =	{font => $style->getType()." ".$style->getSize()." ".$style->getFont()};
+                $css->{".".$temp2} = { color =>$style->getColor(), font => $style->getType()." ".$style->getSize()."px ".$style->getFont()};
             }
         }
         case "Heading3"
@@ -521,12 +535,11 @@ sub toCSS
             if($tomato_block->getStyle_type() == 0)
             {
                 $css->{h4}->{color} = $style->getColor();
-                $css->{h4}->{font} = $style->getType()." ".$style->getSize()." ".$style->getFont();
+                $css->{h4}->{font} = $style->getType()." ".$style->getSize()."px ".$style->getFont();
             }
             else
             {
-                $css->{".".$tomato_block->getStyle_type()} = { color =>$style->getColor()};
-                $css->{".".$tomato_block->getStyle_type()} =	{font => $style->getType()." ".$style->getSize()." ".$style->getFont()};
+                $css->{".".$temp2} = { color =>$style->getColor(), font => $style->getType()." ".$style->getSize()."px ".$style->getFont()};
             }
         }
         case "Header"
@@ -534,12 +547,11 @@ sub toCSS
             if($tomato_block->getStyle_type() == 0)
             {
                 $css->{header}->{color} = $style->getColor();
-                $css->{header}->{font} = $style->getType()." ".$style->getSize()." ".$style->getFont();
+                $css->{header}->{font} = $style->getType()." ".$style->getSize()."px ".$style->getFont();
             }
             else
             {
-                $css->{".".$tomato_block->getStyle_type()} = { color =>$style->getColor()};
-                $css->{".".$tomato_block->getStyle_type()} =	{font => $style->getType()." ".$style->getSize()." ".$style->getFont() };
+                $css->{".".$temp2} = { color =>$style->getColor() , font => $style->getType()." ".$style->getSize()."px ".$style->getFont() };
             }
         }
         case "Footer"
@@ -547,12 +559,11 @@ sub toCSS
             if($tomato_block->getStyle_type() == 0)
             {
                 $css->{'.footer'}->{color}  = $style->getColor();
-                $css->{'.footer'}-> {font}  = $style->getType()." ".$style->getSize()." ".$style->getFont();
+                $css->{'.footer'}-> {font}  = $style->getType()." ".$style->getSize()."px ".$style->getFont();
             }
             else
             {
-                $css->{".".$tomato_block->getStyle_type()} = { color =>$style->getColor()};
-                $css->{".".$tomato_block->getStyle_type()} =	{font =>$style->getType()." ".$style->getSize()." ".$style->getFont()};
+                $css->{".".$temp2} = { color =>$style->getColor(), font =>$style->getType()." ".$style->getSize()."px ".$style->getFont()};
             }
         }
         case "Normal"
@@ -560,12 +571,11 @@ sub toCSS
             if($tomato_block->getStyle_type() == 0)
             {
                 $css->{p}->{color} = $style->getColor();
-                $css->{p}->{font} = $style->getType()." ".$style->getSize()." ".$style->getFont();
+                $css->{p}->{font} = $style->getType()." ".$style->getSize()."px ".$style->getFont();
             }
             else
             {
-                $css->{".".$tomato_block->getStyle_type()} = { color =>$style->getColor()};
-                $css->{".".$tomato_block->getStyle_type()} =	{font => $style->getType()." ".$style->getSize()." ".$style->getFont()};
+                $css->{".".$temp2} = {color =>$style->getColor(), font => $style->getType()." ".$style->getSize()."px ".$style->getFont()};
             }
         }
         else {
