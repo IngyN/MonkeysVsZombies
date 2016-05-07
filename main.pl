@@ -370,6 +370,7 @@ sub closing
     unlink("foot2.xml");
     unlink("foot3.xml");
     unlink("styles.xml");
+    unlink("font.xml");
 }
 
 #Generating
