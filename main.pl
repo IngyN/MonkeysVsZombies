@@ -121,7 +121,7 @@ for (my $i = 0; $i < @fullDocBlockList; $i++)
 HTMLgen(@fullDocBlockList);
 #CSSgen(@fullDocBlockList);
 
-#closing();
+closing();
 
 #######################################################################
 #Parse Document

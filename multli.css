@@ -23,16 +23,16 @@ h1 {
 	font: bold 24px Times New Roman;
 }
 .two {
-	color: #2E74B5;
+	color: #1481AB;
 	font: normal 26px Times New Roman;
 }
 .three {
-	color: #538135;
+	color: #487B77;
 	font: normal 12px Times New Roman;
 }
-.one {
-	color: #FFD966;
-	font: normal 56px Times New Roman;
+.six {
+	color: #0D5571;
+	font: normal 12px Times New Roman;
 }
 .four {
 	color: #FF0000;
@@ -41,4 +41,8 @@ h1 {
 .footer {
 	color: #000000;
 	font: normal 12px Times New Roman;
+}
+.five {
+	color: #FF0000;
+	font: italic bold 32px Cambria;
 }
