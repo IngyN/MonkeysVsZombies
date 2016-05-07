@@ -1,0 +1,60 @@
+p {
+	color: #000000;
+	font: normal 12px Trebuchet MS;
+}
+header {
+	color: #000000;
+	font: normal 12px Trebuchet MS;
+}
+h4 {
+	color: #000000;
+	font: normal 14px Times New Roman;
+}
+h3 {
+	color: #000000;
+	font: italic 16px Times New Roman;
+}
+h2 {
+	color: #000000;
+	font: bold 18px Times New Roman;
+}
+h1 {
+	color: #000000;
+	font: bold 24px Times New Roman;
+}
+.two {
+	color: #000000;
+	font: normal 52px Helvetica Neue;
+}
+.three {
+	color: #0070C0;
+	font: normal 12px Trebuchet MS;
+}
+.six {
+	color: #C42F1A;
+	font: italic 44px Century Gothic;
+}
+.seven {
+	color: #000000;
+	font: bold 12px Trebuchet MS;
+}
+.one {
+	color: #000000;
+	font: normal 56px Trebuchet MS;
+}
+.four {
+	color: #000000;
+	font: italic bold 12px Trebuchet MS;
+}
+.footer {
+	color: #000000;
+	font: normal 12px Trebuchet MS;
+}
+.five {
+	color: #000000;
+	font: italic bold 12px Trebuchet MS;
+}
+.eight {
+	color: #000000;
+	font: bold 12px Trebuchet MS;
+}
