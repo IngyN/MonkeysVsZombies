@@ -23,16 +23,20 @@ h1 {
 	font: bold 24px Times New Roman;
 }
 .two {
-	color: #1481AB;
+	color: #2E74B5;
 	font: normal 26px Times New Roman;
 }
 .three {
-	color: #487B77;
+	color: #538135;
 	font: normal 12px Times New Roman;
 }
 .six {
-	color: #0D5571;
+	color: #1F4D78;
 	font: normal 12px Times New Roman;
+}
+.one {
+	color: #000000;
+	font: normal 56px Times New Roman;
 }
 .four {
 	color: #FF0000;

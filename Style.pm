@@ -20,10 +20,14 @@ sub new ()
     $self->{color} = $color;
 #    $self->{default} = %default;
     
+    say "default in style ", %default;
+    
     #say $self->{basedOn};
     switch($self->{basedOn})
     {
         case "Title" {
+            
+            
             $self->{font} = $default{Heading} if (!defined($font) and %default);
             $self->{type}= "bold" unless (defined($type) and !($type eq ".0."));
             $self->{size}= "24" unless (defined($size) and !($size eq ".0."));

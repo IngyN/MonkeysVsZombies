@@ -57,9 +57,14 @@ unzip $zipped => $footer3Buffer, Name=> "word/footer3.xml" or say "unzip foot fa
 #say $head1fail , $head2fail, $head3fail, $foot1fail, $foot2fail, $foot3fail;
 #####################################################
 
+my %defaultFonts = parseFonts($fontTableBuffer);
+
 my @docBlocks = parseDoc($docBuffer);
 
-my %defaultFonts = parseFonts($fontTableBuffer);
+
+say "fonts after parsefont";
+say %defaultFonts;
+
 
 say "\n print docblocks here\n";
 for (my $i = 0; $i < @docBlocks; $i++)
@@ -105,9 +110,6 @@ if($foot3fail ==0)
 my @footBlocks = (@foot1, @foot2, @foot3);
 
 
-
-say "fonts";
-say %defaultFonts;
 
 ################################################
 my $docName = Block->new();
@@ -268,6 +270,10 @@ sub parseDoc
         $temp= Block->new();
         $styleTemp = Style->new(".0.",".0.",".0.",".0.",".0.", %defaultFonts);
         
+        say "fonts in parse";
+        say %defaultFonts;
+        
+
         my $txt = "";
         foreach my $text  ($wp->findnodes('./w:r/w:t'))
         {
@@ -286,7 +292,7 @@ sub parseDoc
             #Styles are also correct in temp after I set them.
         }
         
-        say "Before further changes ", $temp->getText, " ", $temp->getStyle_id, " returned font ", $temp->getStyle->getFont;
+#        say "Before further changes ", $temp->getText, " ", $temp->getStyle_id, " returned font ", $temp->getStyle->getFont;
         foreach my $nodes ( $wp->findnodes('./w:pPr/w:rPr/w:rFonts'))
         {
             $temp->getStyle->setFont( $nodes->getAttribute("w:ascii"));
@@ -339,8 +345,8 @@ sub parseDoc
             }
         }
         
-        say " After further changes: ", $temp->getText, " ",$temp->getStyle_id, " returned font", $temp->getStyle->getFont;
-#        
+#        say " After further changes: ", $temp->getText, " ",$temp->getStyle_id, " returned font", $temp->getStyle->getFont;
+#
 #        say "styletemp " , " returned color ", $styleTemp->getColor, " returned size ", $styleTemp->getSize;
     
         #THIS IS THE PROBLEM IT OVERRIDES EVERYTHING.
@@ -349,8 +355,8 @@ sub parseDoc
 #        $temp->setStyle($styleTemp);
         
         #Ok everything gets overrided above.
-        say " Nowwwwwwwwtemp: ", $temp->getStyle_id, " returned font ", $temp->getStyle->getFont;
-say " ";
+#        say " Nowwwwwwwwtemp: ", $temp->getStyle_id, " returned font ", $temp->getStyle->getFont;
+#say " ";
         push(@blockList, $temp);
 
     }
