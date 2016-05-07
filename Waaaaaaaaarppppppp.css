@@ -1,0 +1,40 @@
+p {
+	color: #000000;
+	font: normal 12px Tw Cen MT;
+}
+header {
+	color: #000000;
+	font: normal 12px Tw Cen MT;
+}
+h4 {
+	color: #000000;
+	font: normal 14px Times New Roman;
+}
+h3 {
+	color: #000000;
+	font: italic 16px Times New Roman;
+}
+h2 {
+	color: #000000;
+	font: bold 18px Times New Roman;
+}
+h1 {
+	color: #000000;
+	font: bold 24px Times New Roman;
+}
+.two {
+	color: #FF0000;
+	font: normal 48px Tw Cen MT;
+}
+.three {
+	color: #000000;
+	font: normal 56px Tw Cen MT;
+}
+.one {
+	color: #FF0000;
+	font: normal 48px Tw Cen MT;
+}
+.footer {
+	color: #000000;
+	font: normal 10px Tw Cen MT;
+}

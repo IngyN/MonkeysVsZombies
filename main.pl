@@ -21,10 +21,15 @@ use Style;
 #say "Hello";
 #Parsing
 
-my $filename = "multli";
-rename($filename.".docx", $filename.".docx.zip");
+my $filename = $ARGV[0];
+#say @ARGV;
+#say $filename;
+rename($filename, $filename.".zip");
 
-my $zipped = $filename.".docx.zip";
+my $zipped = $filename.".zip";
+
+$filename =~ s/.docx//;
+#say $filename;
 
 my $docBuffer = "doc.xml";
 my $stylesBuffer = "styles.xml";
@@ -60,10 +65,6 @@ unzip $zipped => $footer3Buffer, Name=> "word/footer3.xml" or say "unzip foot fa
 my %defaultFonts = parseFonts($fontTableBuffer);
 
 my @docBlocks = parseDoc($docBuffer);
-
-
-say "fonts after parsefont";
-say %defaultFonts;
 
 
 #say "\n print docblocks here\n";
@@ -121,18 +122,18 @@ push(my @arrname, $docName);
 
 my @fullDocBlockList = (@arrname,  @headBlocks , @docBlocks , @footBlocks);
 
-say "Postparsing";
-for (my $i = 0; $i < @fullDocBlockList; $i++)
-{
-    say $fullDocBlockList[$i]->getText;
-    say $fullDocBlockList[$i]->getStyle->getColor;
-    say " ";
-}
+#say "Postparsing";
+#for (my $i = 0; $i < @fullDocBlockList; $i++)
+#{
+#    say $fullDocBlockList[$i]->getText;
+#    say $fullDocBlockList[$i]->getStyle->getColor;
+#    say " ";
+#}
 
 
 HTMLgen(@fullDocBlockList);
 #CSSgen(@fullDocBlockList);
-
+rename($filename.".docx", $filename.".docx.zip");
 closing();
 
 #######################################################################
@@ -270,8 +271,8 @@ sub parseDoc
         $temp= Block->new(".0.",".0.",".0.",".0.", %defaultFonts);
         $styleTemp = Style->new(".0.",".0.",".0.",".0.",".0.", %defaultFonts);
         
-        say "fonts in parse";
-        say %defaultFonts;
+#        say "fonts in parse";
+#        say %defaultFonts;
         
 
         my $txt = "";
@@ -418,7 +419,7 @@ sub HTMLgen
     foreach my $k (0 .. $#blockList)
     {
         my $potato_temp = $blockList[$k]->getStyle();
-        $potato_temp ->printStyle();
+#        $potato_temp ->printStyle();
         if(check( $potato_temp, @defaultStyles))
         {
 #            $potato_temp ->printStyle();

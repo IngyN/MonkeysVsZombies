@@ -63,7 +63,7 @@ sub new ()
     $self->{basedOn} = "none"  unless (defined($self->{basedOn}) and !($self->{basedOn} eq ".0."));
     $self->{color} = "#000000" unless (defined ($self->{color}) and !($self->{color} eq ".0.")) ;
     
-    say "font in style ", $self->{font};
+#    say "font in style ", $self->{font};
     
     #     say $self->{font};
     #     say $self->{size};
