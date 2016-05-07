@@ -25,7 +25,9 @@ my $filename = "multli";
 rename($filename.".docx", $filename.".docx.zip");
 
 my $zipped = $filename.".docx.zip";
+
 my $docBuffer = "doc.xml";
+my $stylesBuffer = "styles.xml";
 my $header1Buffer = "head1.xml";
 my $header2Buffer = "head2.xml";
 my $header3Buffer = "head3.xml";
@@ -39,6 +41,7 @@ my $head1fail= my $head2fail = my $head3fail = my $foot1fail = my $foot2fail = m
 ################################
 
 unzip $zipped => $docBuffer, Name=> "word/document.xml" or die "unzip doc failed: $UnzipError\n";
+unzip $zipped => $stylesBuffer, Name=> "word/styles.xml" or die "unzip doc failed: $UnzipError\n";
 
 unzip $zipped => $header1Buffer, Name=> "word/header1.xml" or say "unzip head failed: $UnzipError\n" and $head1fail = 1;
 unzip $zipped => $header2Buffer, Name=> "word/header2.xml" or say "unzip head failed: $UnzipError\n" and $head2fail = 1;
@@ -50,7 +53,16 @@ unzip $zipped => $footer3Buffer, Name=> "word/footer3.xml" or say "unzip foot fa
 
 #say $head1fail , $head2fail, $head3fail, $foot1fail, $foot2fail, $foot3fail;
 #####################################################
+
 my @docBlocks = parseDoc($docBuffer);
+
+say "\n print docblocks here\n";
+for (my $i = 0; $i < @docBlocks; $i++)
+{
+    say $docBlocks[$i]->getText;
+    say $docBlocks[$i]->getStyle->getColor;
+    say " ";
+}
 
 my @head1, my @head2, my @head3;
 
@@ -68,6 +80,8 @@ if($head3fail ==0)
 }
 
 my @headBlocks = (@head1, @head2, @head3);
+
+
 
 my @foot1, my @foot2, my @foot3;
 
@@ -95,20 +109,14 @@ push(my @arrname, $docName);
 
 my @fullDocBlockList = (@arrname,  @headBlocks , @docBlocks , @footBlocks);
 
-#for (my $i = 0; $i < @fullDocBlockList; $i++)
-#{
-#    say $fullDocBlockList[$i]->getStyle_id();
-#}
+say "Postparsing";
+for (my $i = 0; $i < @fullDocBlockList; $i++)
+{
+    say $fullDocBlockList[$i]->getText;
+    say $fullDocBlockList[$i]->getStyle->getColor;
+    say " ";
+}
 
-
-#for (my $i = 0; $i < @headBlocks; $i++)
-#{
-#    say $headBlocks[$i]->getText();
-#}
-#
-#for (my $i = 0; $i < @footBlocks; $i++) {
-#    say $footBlocks[$i]->getText();
-#}
 
 HTMLgen(@fullDocBlockList);
 #CSSgen(@fullDocBlockList);
@@ -118,6 +126,93 @@ closing();
 #######################################################################
 #Parse Document
 #######################################################################
+sub parseStyles
+{
+    my $path = shift;
+    my $lookForStyle = shift;
+    
+    say " ";
+    say "lookfor is " , $lookForStyle;
+    
+    my $dom = XML::LibXML->load_xml(location => $path);
+
+    my $styleTemp = Style->new();
+    
+    foreach my $wp ($dom->findnodes('//w:style'))
+    {
+        if($wp->getAttribute("w:styleId") eq $lookForStyle)
+        {
+            
+            
+            
+            foreach my $nodes ( $wp->findnodes('./w:basedOn'))
+            {
+                $styleTemp ->setBasedOn( $nodes->getAttribute("w:val"));
+            }
+            
+            #        foreach my $nodes ( $wp->findnodes('./w:rPr/w:rFonts'))
+            #        {
+            #            $styleTemp ->setFont( $nodes->getAttribute("w:ascii"));
+            #        }
+            
+            foreach my $nodes ( $wp->findnodes('./w:rPr/w:color'))
+            {
+                $styleTemp ->setColor( "#".$nodes->getAttribute("w:val"));
+            }
+            
+            foreach my $nodes ( $wp->findnodes('./w:rPr/w:sz'))
+            {
+                $styleTemp ->setSize( $nodes->getAttribute("w:val"));
+            }
+            
+            my $set = 0;
+            foreach my $nodes ( $wp->findnodes('./w:rPr/w:i'))
+            {
+                if ($set == 0)
+                {
+                    $styleTemp ->setType("italic");
+                    $set = 1;
+                }
+                
+            }
+            foreach my $nodes ( $wp->findnodes('./w:rPr/w:b'))
+            {
+                if ($set == 0)
+                {
+                    $styleTemp ->setType("bold");
+                    $set = 1;
+                }
+                else
+                {
+                    $styleTemp ->setType($styleTemp ->getType." bold");
+                    $set = 1;
+                }
+            }
+            foreach my $nodes ( $wp->findnodes('./w:rPr/w:u'))
+            {
+                if ($set == 0)
+                {
+                    $styleTemp ->setType("underlined");
+                    $set = 1;
+                }
+                else
+                {
+                    $styleTemp ->setType($styleTemp ->getType." underlined");
+                    $set = 1;
+                }
+            }
+
+        }
+        
+      
+    }
+    #The styles are parsed correctly until here, there's an issue returning them properly.
+    
+    say $styleTemp->getSize, $styleTemp->getColor, $styleTemp->getType, $styleTemp->getBasedOn;
+    
+    return $styleTemp;
+}
+
 sub parseDoc
 {
     my $path = shift;
@@ -129,6 +224,7 @@ sub parseDoc
     my @blockList;
     my $temp;
     my $styleTemp;
+    my $returnedStyleTemp;
     
     foreach my $wp ($dom->findnodes('//w:p'))
     {
@@ -138,7 +234,14 @@ sub parseDoc
         foreach my $nodes ( $wp->findnodes('./w:pPr/w:pStyle'))
         {
             $temp ->setStyle_id( $nodes->getAttribute("w:val"));
+            $returnedStyleTemp = parseStyles("styles.xml", $temp->getStyle_id);
             
+            #Ok, the values here are also correct.
+            say $temp->getStyle_id, " returned color ", $returnedStyleTemp->getColor, " returned size ", $returnedStyleTemp->getSize;
+            
+            $temp->setStyle($returnedStyleTemp);
+            #Styles are also correct in temp after I set them.
+            say " Nowtemp: ", $temp->getStyle_id, " returned color ", $temp->getStyle->getColor, " returned size ", $temp->getStyle->getSize;
         }
         
         foreach my $nodes ( $wp->findnodes('./w:pPr/w:rPr/w:rFonts'))
@@ -204,10 +307,9 @@ sub parseDoc
         
         $temp->setText( $txt);
         $temp->setStyle($styleTemp);
-        #        my $t = \$temp;
+
         push(@blockList, $temp);
-        #        $temp->setText("");
-        #        $temp->setStyle_id("");
+
     }
     
     return @blockList;

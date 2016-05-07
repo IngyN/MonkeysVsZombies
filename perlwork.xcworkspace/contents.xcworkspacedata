@@ -8,15 +8,6 @@
       location = "group:multli.docx">
    </FileRef>
    <FileRef
-      location = "group:doc.xml">
-   </FileRef>
-   <FileRef
-      location = "group:foot.xml">
-   </FileRef>
-   <FileRef
-      location = "group:head.xml">
-   </FileRef>
-   <FileRef
       location = "group:test.docx">
    </FileRef>
    <FileRef
