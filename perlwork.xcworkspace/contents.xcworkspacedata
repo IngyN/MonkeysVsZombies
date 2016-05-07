@@ -2,6 +2,12 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:multli.css">
+   </FileRef>
+   <FileRef
+      location = "group:multli.html">
+   </FileRef>
+   <FileRef
       location = "group:equalstet.pl">
    </FileRef>
    <FileRef

@@ -121,7 +121,7 @@ for (my $i = 0; $i < @fullDocBlockList; $i++)
 HTMLgen(@fullDocBlockList);
 #CSSgen(@fullDocBlockList);
 
-closing();
+#closing();
 
 #######################################################################
 #Parse Document
@@ -218,8 +218,8 @@ sub parseDoc
     my $path = shift;
     my $dom = XML::LibXML->load_xml(location => $path);
     
-    say '$dom is a ', ref($dom);
-    say '$dom->nodeName is: ', $dom->nodeName;
+#    say '$dom is a ', ref($dom);
+#    say '$dom->nodeName is: ', $dom->nodeName;
     
     my @blockList;
     my $temp;
@@ -231,42 +231,45 @@ sub parseDoc
         $temp= Block->new();
         $styleTemp = Style->new();
         
+        my $txt = "";
+        foreach my $text  ($wp->findnodes('./w:r/w:t'))
+        {
+            $txt = $txt.$text->to_literal();
+        }
+        
         foreach my $nodes ( $wp->findnodes('./w:pPr/w:pStyle'))
         {
             $temp ->setStyle_id( $nodes->getAttribute("w:val"));
             $returnedStyleTemp = parseStyles("styles.xml", $temp->getStyle_id);
             
             #Ok, the values here are also correct.
-            say $temp->getStyle_id, " returned color ", $returnedStyleTemp->getColor, " returned size ", $returnedStyleTemp->getSize;
             
             $temp->setStyle($returnedStyleTemp);
             #Styles are also correct in temp after I set them.
-            say " Nowtemp: ", $temp->getStyle_id, " returned color ", $temp->getStyle->getColor, " returned size ", $temp->getStyle->getSize;
         }
         
+        say "Before further changes ", $temp->getText, " ", $temp->getStyle_id, " returned font ", $temp->getStyle->getFont;
         foreach my $nodes ( $wp->findnodes('./w:pPr/w:rPr/w:rFonts'))
         {
-            $styleTemp ->setFont( $nodes->getAttribute("w:ascii"));
+            $temp->getStyle->setFont( $nodes->getAttribute("w:ascii"));
         }
         
         foreach my $nodes ( $wp->findnodes('./w:pPr/w:rPr/w:color'))
         {
-            $styleTemp ->setColor( "#".$nodes->getAttribute("w:val"));
+            $temp->getStyle->setColor( "#".$nodes->getAttribute("w:val"));
         }
         
         foreach my $nodes ( $wp->findnodes('./w:pPr/w:rPr/w:sz'))
         {
-            $styleTemp ->setSize( $nodes->getAttribute("w:val"));
+            $temp->getStyle->setSize( $nodes->getAttribute("w:val"));
         }
-        
-        $styleTemp ->setBasedOn( $temp->getStyle_id);
         
         my $set = 0;
         foreach my $nodes ( $wp->findnodes('./w:pPr/w:rPr/w:i'))
         {
             if ($set == 0)
             {
-                $styleTemp ->setType("italic");
+                $temp->getStyle->setType("italic");
                 $set = 1;
             }
             
@@ -275,12 +278,12 @@ sub parseDoc
         {
             if ($set == 0)
             {
-                $styleTemp ->setType("bold");
+                $temp->getStyle->setType("bold");
                 $set = 1;
             }
             else
             {
-                $styleTemp ->setType($styleTemp ->getType." bold");
+                $temp->getStyle->setType($temp->getStyle->getType." bold");
                 $set = 1;
             }
         }
@@ -288,26 +291,28 @@ sub parseDoc
         {
             if ($set == 0)
             {
-                $styleTemp ->setType("underlined");
+                $temp->getStyle->setType("underlined");
                 $set = 1;
             }
             else
             {
-                $styleTemp ->setType($styleTemp ->getType." underlined");
+                $temp->getStyle->setType($temp->getStyle->getType." underlined");
                 $set = 1;
             }
         }
         
-        
-        my $txt = "";
-        foreach my $text  ($wp->findnodes('./w:r/w:t'))
-        {
-            $txt = $txt.$text->to_literal();
-        }
+        say " After further changes: ", $temp->getText, " ",$temp->getStyle_id, " returned font", $temp->getStyle->getFont;
+#        
+#        say "styletemp " , " returned color ", $styleTemp->getColor, " returned size ", $styleTemp->getSize;
+    
+        #THIS IS THE PROBLEM IT OVERRIDES EVERYTHING.
         
         $temp->setText( $txt);
-        $temp->setStyle($styleTemp);
-
+#        $temp->setStyle($styleTemp);
+        
+        #Ok everything gets overrided above.
+        say " Nowwwwwwwwtemp: ", $temp->getStyle_id, " returned font ", $temp->getStyle->getFont;
+say " ";
         push(@blockList, $temp);
 
     }
@@ -326,6 +331,7 @@ sub closing
     unlink("foot1.xml");
     unlink("foot2.xml");
     unlink("foot3.xml");
+    unlink("styles.xml");
 }
 
 #Generating

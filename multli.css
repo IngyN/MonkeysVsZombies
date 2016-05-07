@@ -12,7 +12,7 @@ h4 {
 }
 h3 {
 	color: #000000;
-	font: normal 12px Times New Roman;
+	font: italic 16px Times New Roman;
 }
 h2 {
 	color: #000000;
@@ -23,12 +23,20 @@ h1 {
 	font: bold 24px Times New Roman;
 }
 .two {
-	color: #FF0000;
-	font: italic bold 32px Cambria;
+	color: #2E74B5;
+	font: normal 26px Times New Roman;
 }
-.one {
+.three {
 	color: #538135;
 	font: normal 12px Times New Roman;
+}
+.one {
+	color: #FFD966;
+	font: normal 56px Times New Roman;
+}
+.four {
+	color: #FF0000;
+	font: italic bold 32px Cambria;
 }
 .footer {
 	color: #000000;
