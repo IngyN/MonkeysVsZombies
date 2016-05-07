@@ -20,7 +20,7 @@ sub new ()
     $self->{color} = $color;
 #    $self->{default} = %default;
     
-    say "default in style ", %default;
+    
     
     #say $self->{basedOn};
     switch($self->{basedOn})
@@ -64,6 +64,8 @@ sub new ()
     $self->{type} = "normal"  unless (defined($self->{type}) and !($self->{type} eq ".0."));# type: bold, italic, none
     $self->{basedOn} = "none"  unless (defined($self->{basedOn}) and !($self->{basedOn} eq ".0."));
     $self->{color} = "#000000" unless (defined ($self->{color}) and !($self->{color} eq ".0.")) ;
+    
+    say "font in style ", $self->{font};
     
     #     say $self->{font};
     #     say $self->{size};

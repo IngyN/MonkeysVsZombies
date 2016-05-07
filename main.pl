@@ -66,13 +66,13 @@ say "fonts after parsefont";
 say %defaultFonts;
 
 
-say "\n print docblocks here\n";
-for (my $i = 0; $i < @docBlocks; $i++)
-{
-    say $docBlocks[$i]->getText;
-    say $docBlocks[$i]->getStyle->getColor;
-    say " ";
-}
+#say "\n print docblocks here\n";
+#for (my $i = 0; $i < @docBlocks; $i++)
+#{
+#    say $docBlocks[$i]->getText;
+#    say $docBlocks[$i]->getStyle->getColor;
+#    say " ";
+#}
 
 my @head1, my @head2, my @head3;
 
@@ -143,8 +143,8 @@ sub parseStyles
     my $path = shift;
     my $lookForStyle = shift;
     
-    say " ";
-    say "lookfor is " , $lookForStyle;
+#    say " ";
+#    say "lookfor is " , $lookForStyle;
     
     my $dom = XML::LibXML->load_xml(location => $path);
 
@@ -162,10 +162,10 @@ sub parseStyles
                 $styleTemp ->setBasedOn( $nodes->getAttribute("w:val"));
             }
             
-            #        foreach my $nodes ( $wp->findnodes('./w:rPr/w:rFonts'))
-            #        {
-            #            $styleTemp ->setFont( $nodes->getAttribute("w:ascii"));
-            #        }
+#                    foreach my $nodes ( $wp->findnodes('./w:rPr/w:rFonts'))
+#                    {
+#                        $styleTemp ->setFont( $nodes->getAttribute("w:ascii"));
+#                    }
             
             foreach my $nodes ( $wp->findnodes('./w:rPr/w:color'))
             {
@@ -220,7 +220,7 @@ sub parseStyles
     }
     #The styles are parsed correctly until here, there's an issue returning them properly.
     
-    say $styleTemp->getSize, $styleTemp->getColor, $styleTemp->getType, $styleTemp->getBasedOn;
+#    say $styleTemp->getSize, $styleTemp->getColor, $styleTemp->getType, $styleTemp->getBasedOn;
     
     return $styleTemp;
 }
