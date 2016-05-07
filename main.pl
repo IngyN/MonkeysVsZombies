@@ -28,6 +28,8 @@ my $zipped = $filename.".docx.zip";
 
 my $docBuffer = "doc.xml";
 my $stylesBuffer = "styles.xml";
+my $fontTableBuffer = "font.xml";
+
 my $header1Buffer = "head1.xml";
 my $header2Buffer = "head2.xml";
 my $header3Buffer = "head3.xml";
@@ -42,6 +44,7 @@ my $head1fail= my $head2fail = my $head3fail = my $foot1fail = my $foot2fail = m
 
 unzip $zipped => $docBuffer, Name=> "word/document.xml" or die "unzip doc failed: $UnzipError\n";
 unzip $zipped => $stylesBuffer, Name=> "word/styles.xml" or die "unzip doc failed: $UnzipError\n";
+unzip $zipped => $fontTableBuffer, Name=> "word/fontTable.xml" or die "unzip doc failed: $UnzipError\n";
 
 unzip $zipped => $header1Buffer, Name=> "word/header1.xml" or say "unzip head failed: $UnzipError\n" and $head1fail = 1;
 unzip $zipped => $header2Buffer, Name=> "word/header2.xml" or say "unzip head failed: $UnzipError\n" and $head2fail = 1;
@@ -55,6 +58,8 @@ unzip $zipped => $footer3Buffer, Name=> "word/footer3.xml" or say "unzip foot fa
 #####################################################
 
 my @docBlocks = parseDoc($docBuffer);
+
+my %defaultFonts = parseFonts($fontTableBuffer);
 
 say "\n print docblocks here\n";
 for (my $i = 0; $i < @docBlocks; $i++)
@@ -98,6 +103,11 @@ if($foot3fail ==0)
     @foot3 = parseDoc($footer3Buffer);
 }
 my @footBlocks = (@foot1, @foot2, @foot3);
+
+
+
+say "fonts";
+say %defaultFonts;
 
 ################################################
 my $docName = Block->new();
@@ -213,6 +223,33 @@ sub parseStyles
     return $styleTemp;
 }
 
+sub parseFonts
+{
+    my %defFonts;
+    my $path = shift;
+    my $dom = XML::LibXML->load_xml(location => $path);
+    
+    #    say '$dom is a ', ref($dom);
+    #    say '$dom->nodeName is: ', $dom->nodeName;
+    
+    my %hash;
+    
+    foreach my $fonts ($dom->findnodes('//w:font[1]'))
+    {
+        
+        $defFonts{'Body'} = $fonts->getAttribute("w:name");
+        
+    }
+    foreach my $fonts ($dom->findnodes('//w:font[3]'))
+    {
+        
+        $defFonts{'Heading'} = $fonts->getAttribute("w:name");
+        
+    }
+    
+    return %defFonts;
+}
+    
 sub parseDoc
 {
     my $path = shift;
@@ -229,13 +266,14 @@ sub parseDoc
     foreach my $wp ($dom->findnodes('//w:p'))
     {
         $temp= Block->new();
-        $styleTemp = Style->new();
+        $styleTemp = Style->new(".0.",".0.",".0.",".0.",".0.", %defaultFonts);
         
         my $txt = "";
         foreach my $text  ($wp->findnodes('./w:r/w:t'))
         {
             $txt = $txt.$text->to_literal();
         }
+        
         
         foreach my $nodes ( $wp->findnodes('./w:pPr/w:pStyle'))
         {
