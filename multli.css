@@ -1,0 +1,44 @@
+p {
+	color: #000000;
+	font: normal 12px Calibri;
+}
+header {
+	color: #000000;
+	font: normal 12px Calibri;
+}
+h4 {
+	color: #000000;
+	font: normal 14px Calibri Light;
+}
+h3 {
+	color: #000000;
+	font: italic 16px Calibri Light;
+}
+h2 {
+	color: #000000;
+	font: bold 18px Calibri Light;
+}
+h1 {
+	color: #000000;
+	font: bold 24px Calibri Light;
+}
+.two {
+	color: #2E74B5;
+	font: normal 26px Calibri;
+}
+.three {
+	color: #538135;
+	font: normal 12px Calibri;
+}
+.one {
+	color: #FFD966;
+	font: normal 56px Calibri;
+}
+.four {
+	color: #FF0000;
+	font: italic bold 32px Cambria;
+}
+.footer {
+	color: #000000;
+	font: normal 12px Calibri;
+}

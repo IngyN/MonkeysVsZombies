@@ -24,6 +24,11 @@ use Style;
 my $filename = $ARGV[0];
 #say @ARGV;
 #say $filename;
+
+if (!defined($filename))
+{
+   die "No Word document name.";
+}
 rename($filename, $filename.".zip");
 
 my $zipped = $filename.".zip";
