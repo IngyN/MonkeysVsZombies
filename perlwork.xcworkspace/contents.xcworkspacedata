@@ -8,9 +8,6 @@
       location = "group:multli.docx">
    </FileRef>
    <FileRef
-      location = "group:test.docx">
-   </FileRef>
-   <FileRef
       location = "group:Block.pm">
    </FileRef>
    <FileRef
