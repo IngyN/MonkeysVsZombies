@@ -10,7 +10,7 @@ package Style;
 
 sub new ()
 {
-    my ($class, $font, $size, $type, $basedOn, $color) = @_;
+    my ($class, $font, $size, $type, $basedOn, $color, %default) = @_;
     my $self = {};
     
     $self->{font} = $font;
@@ -18,33 +18,41 @@ sub new ()
     $self->{type} = $type;
     $self->{basedOn} = $basedOn;
     $self->{color} = $color;
+#    $self->{default} = %default;
     
     #say $self->{basedOn};
     switch($self->{basedOn})
     {
         case "Title" {
+            $self->{font} = $default{Heading} if (!defined($font) and %default);
             $self->{type}= "bold" unless (defined($type) and !($type eq ".0."));
             $self->{size}= "24" unless (defined($size) and !($size eq ".0."));
         }
         case "Heading1" {
+            $self->{font} = $default{Heading} if (!defined($font) and %default);
             $self->{type}= "bold" unless (defined($type) and !($type eq ".0."));
             $self->{size}= "18" unless (defined($size) and !($size eq ".0."));
         }
         case "Heading2"  {
+            $self->{font} = $default{Heading} if (!defined($font) and %default);
             $self->{type} = "italic" unless (defined($type) and !($type eq ".0."));
             $self->{size}= "16" unless (defined($size) and !($size eq ".0."));
         }
         case "Heading3"  {
+            $self->{font} = $default{Heading} if (!defined($font) and %default);
             $self->{size}= "14" unless (defined($size) and !($size eq ".0."));
         }
         case "Heading4" {
+            $self->{font} = $default{Heading} if (!defined($font) and %default);
             $self->{size} = "12" unless (defined($size) and !($size eq ".0."));
         }
         case "Footer"  {
+            $self->{font} = $default{Body} if (!defined($font) and %default);
             $self->{size}= "10" unless (defined($size) and !($size eq ".0."));
         }
         #BasedOn = "Normal" + "Name"
         else  {
+            $self->{font} = $default{Body} if (!defined($font) and %default);
         }
     }
     $self->{font} = "Times New Roman" unless (defined($self->{font}) and !($self->{font} eq ".0."));
