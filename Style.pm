@@ -26,37 +26,35 @@ sub new ()
     switch($self->{basedOn})
     {
         case "Title" {
-            
-            
-            $self->{font} = $default{Heading} if (!defined($font) and %default);
+            $self->{font} = $default{Heading} if (%default and (not(defined($font)) or($font eq ".0.")));
             $self->{type}= "bold" unless (defined($type) and !($type eq ".0."));
             $self->{size}= "24" unless (defined($size) and !($size eq ".0."));
         }
         case "Heading1" {
-            $self->{font} = $default{Heading} if (!defined($font) and %default);
+            $self->{font} = $default{Heading} if (%default and (not(defined($font)) or($font eq ".0.")));
             $self->{type}= "bold" unless (defined($type) and !($type eq ".0."));
             $self->{size}= "18" unless (defined($size) and !($size eq ".0."));
         }
         case "Heading2"  {
-            $self->{font} = $default{Heading} if (!defined($font) and %default);
+            $self->{font} = $default{Heading} if (%default and (not(defined($font)) or($font eq ".0.")));
             $self->{type} = "italic" unless (defined($type) and !($type eq ".0."));
             $self->{size}= "16" unless (defined($size) and !($size eq ".0."));
         }
         case "Heading3"  {
-            $self->{font} = $default{Heading} if (!defined($font) and %default);
+            $self->{font} = $default{Heading} if (%default and (not(defined($font)) or($font eq ".0.")));
             $self->{size}= "14" unless (defined($size) and !($size eq ".0."));
         }
         case "Heading4" {
-            $self->{font} = $default{Heading} if (!defined($font) and %default);
+            $self->{font} = $default{Heading} if (%default and (not(defined($font)) or($font eq ".0.")));
             $self->{size} = "12" unless (defined($size) and !($size eq ".0."));
         }
         case "Footer"  {
-            $self->{font} = $default{Body} if (!defined($font) and %default);
+            $self->{font} = $default{Body} if (%default and (not(defined($font)) or($font eq ".0.")));
             $self->{size}= "10" unless (defined($size) and !($size eq ".0."));
         }
         #BasedOn = "Normal" + "Name"
-        else  {
-            $self->{font} = $default{Body} if (!defined($font) and %default);
+        else  {   	
+            $self->{font} = $default{Body} if (%default and (not(defined($font)) or($font eq ".0.")));
         }
     }
     $self->{font} = "Times New Roman" unless (defined($self->{font}) and !($self->{font} eq ".0."));

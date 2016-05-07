@@ -112,7 +112,7 @@ my @footBlocks = (@foot1, @foot2, @foot3);
 
 
 ################################################
-my $docName = Block->new();
+my $docName = Block->new(".0.",".0.",".0.",".0.", %defaultFonts);
 $docName->setStyle_id("Name");
 $docName->setText($filename);
 
@@ -148,7 +148,7 @@ sub parseStyles
     
     my $dom = XML::LibXML->load_xml(location => $path);
 
-    my $styleTemp = Style->new();
+    my $styleTemp = Style->new('.0.','.0.','.0.','.0.','.0.', %defaultFonts);
     
     foreach my $wp ($dom->findnodes('//w:style'))
     {
@@ -267,7 +267,7 @@ sub parseDoc
     
     foreach my $wp ($dom->findnodes('//w:p'))
     {
-        $temp= Block->new();
+        $temp= Block->new(".0.",".0.",".0.",".0.", %defaultFonts);
         $styleTemp = Style->new(".0.",".0.",".0.",".0.",".0.", %defaultFonts);
         
         say "fonts in parse";
@@ -409,7 +409,7 @@ sub HTMLgen
     
     foreach my $o (0.. $#style_names)
     {
-        $tomato_potato = Style-> new (".0.", ".0.", ".0.", $style_names[$o], ".0.");
+        $tomato_potato = Style-> new (".0.", ".0.", ".0.", $style_names[$o], ".0.",          %defaultFonts);
         push (@defaultStyles, $tomato_potato);
     }
     
