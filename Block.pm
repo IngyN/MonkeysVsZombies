@@ -4,9 +4,11 @@ use warnings;
 use Style;
 
 package Block;
+
+# %default { "Heading" => "Calibri", "Body" => "Calibri Light"};
 sub new
 {
-    my ($class, $style_id,  $text, $style, $style_type) = @_;
+    my ($class, $style_id,  $text, $style, $style_type, %default) = @_;
     my $self = {};
     
     $self->{style_id} = $style_id;
@@ -16,9 +18,9 @@ sub new
     
     $self->{style_id} = "Normal" unless  (defined($style_id) and !($style_id eq ".0."));
     $self->{text} = "" unless (defined($text) and !($text eq ".0."));
-    $self->{style_type} = 0 unless (defined($style_type) and !($text eq ".0."));
+    $self->{style_type} = 0 unless (defined($style_type) and !($style_type eq ".0."));
     
-    $self->{style} = Style->new()  unless (defined($style) and !($style eq ".0."));
+    $self->{style} = Style->new(".0.",".0.",".0.",".0.",".0.", %default)  unless (defined($style) and !($style eq ".0."));
     #This instruction will create an object of Style when we use the module
     
     bless ($self, $class);
